@@ -10,7 +10,7 @@ namespace EnergyData
     {
         static void Main(string[] args)
         {
-            //
+            
         }
     }
 }
