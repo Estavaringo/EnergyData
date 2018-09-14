@@ -1,2 +1,2 @@
 # EnergyData
-Driver de aquisição de dados para sistema de gestão de energia
+Data acquisition driver designed for power monitoring system
