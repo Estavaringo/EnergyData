@@ -12,8 +12,18 @@ namespace EnergyData {
         public String ip { get; set; }
         public byte endereco { get; set; }
         public String modelo { get; set; }
-        public String status { get; set; }
+        public String descricao { get; set; }
+        public bool status { get; set; }    //flag medidor OK ou não
         public bool ativo { get; set; }
+
+        public MedidorDeEnergia(int codigo, String ip, byte endereco, String modelo, String descricao, bool ativo){
+            this.codigo = codigo;
+            this.ip = ip;
+            this.endereco = endereco;
+            this.modelo = modelo;
+            this.descricao = descricao;
+            this.ativo = ativo;
+        }
 
         public bool checkCon() {
             return false;
@@ -27,7 +37,7 @@ namespace EnergyData {
             //constroi o aquisitor com o endereço correspondente ao modelo do medidor
             switch (modelo) {
                 case "PM710":
-                    aquisitor = new Aquisitor(this, 1014, 2);
+                    aquisitor = new Aquisitor(this, 1012, 2);
                     break;
                 default:
                     Console.WriteLine("Data: " + DateTime.Now + "Modelo de medidor não suportado " + this.codigo + " " + this.modelo);
@@ -38,9 +48,11 @@ namespace EnergyData {
             try {
                 med.valor = aquisitor.Executa();
             }catch(Exception e) {
+                this.status = false; 
                 throw e;
             }
 
+            this.status = true;
             med.dataHora = DateTime.Now;
 
             return med;
@@ -52,6 +64,7 @@ namespace EnergyData {
             return med;
         }
         */
+
 
         public Medicao getConsumo() {
             Medicao med = new Medicao("KW", this.codigo);
@@ -71,9 +84,11 @@ namespace EnergyData {
             try {
                 med.valor = aquisitor.Executa();
             } catch (Exception e) {
+                this.status = false; 
                 throw e;
             }
 
+            this.status = true;
             med.dataHora = DateTime.Now;
 
             return med;
@@ -97,9 +112,11 @@ namespace EnergyData {
             try {
                 med.valor = aquisitor.Executa();
             } catch (Exception e) {
+                this.status = false; 
                 throw e;
             }
 
+            this.status = true;
             med.dataHora = DateTime.Now;
 
             return med;
@@ -112,7 +129,7 @@ namespace EnergyData {
             //constroi o aquisitor com o endereço correspondente ao modelo do medidor
             switch (modelo) {
                 case "PM710":
-                    aquisitor = new Aquisitor(this, 1012, 2);
+                    aquisitor = new Aquisitor(this, 1010, 2);
                     break;
                 default:
                     Console.WriteLine("Data: " + DateTime.Now + "Modelo de medidor não suportado " + this.codigo + " " + this.modelo);
@@ -123,9 +140,11 @@ namespace EnergyData {
             try {
                 med.valor = aquisitor.Executa();
             } catch (Exception e) {
+                this.status = false; 
                 throw e;
             }
 
+            this.status = true;
             med.dataHora = DateTime.Now;
 
             return med;

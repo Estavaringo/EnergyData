@@ -63,16 +63,18 @@
     <Compile Include="DAO\BDConnection.cs" />
     <Compile Include="DAO\MedicaoDAO.cs" />
     <Compile Include="DAO\MedidorDAO.cs" />
-    <Compile Include="main\Aquisitor.cs" />
-    <Compile Include="main\Medicao.cs" />
-    <Compile Include="main\MedidorDeEnergia.cs" />
-    <Compile Include="main\Program.cs" />
+    <Compile Include="Aquisitor.cs" />
+    <Compile Include="Medicao.cs" />
+    <Compile Include="MedidorDeEnergia.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="main\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

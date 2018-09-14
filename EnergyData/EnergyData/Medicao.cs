@@ -17,5 +17,8 @@ namespace EnergyData {
             this.grandezaEletrica = grandezaEletrica;
         }
 
+        public override string ToString() {
+            return this.valor + " " + grandezaEletrica;
+        }
     }
 }

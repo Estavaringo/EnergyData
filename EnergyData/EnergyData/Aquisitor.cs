@@ -29,18 +29,21 @@ namespace EnergyData {
         //NECESSARIO LANÇAR EXCESSÃO QUANDO FALHAR A CONEXÃO
         public float Executa() {
             float res;
+            try{
+                using (TcpClient client = new TcpClient(this.medidorDeEnergia.ip, 502)) {
+                    ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
 
-            using (TcpClient client = new TcpClient(this.medidorDeEnergia.ip, 502)) {
-                ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
 
+                    ushort startAddress = this.registrador--;
+                    ushort numInputs = this.quantidade;
+                    ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, numInputs);
 
-                ushort startAddress = this.registrador--;
-                ushort numInputs = this.quantidade;
-                ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, numInputs);
-
-                //throw new Exception("Medidor Offline");
-
+                    //throw new Exception("Medidor Offline");
+            
                 res = this.ToFloat(registers);
+                }
+            }catch (Exception e){
+                throw e;
             }
             return res;
         }
@@ -48,10 +51,10 @@ namespace EnergyData {
         //converte o valor do registrador(32 bit) para float
         public float ToFloat(ushort[] registers) {
             byte[] bytes = new byte[4];
-            bytes[0] = (byte)(registers[1] & 0xFF);
-            bytes[1] = (byte)(registers[1] >> 8);
-            bytes[2] = (byte)(registers[0] & 0xFF);
-            bytes[3] = (byte)(registers[0] >> 8);
+            bytes[0] = (byte)(registers[0] & 0xFF);
+            bytes[1] = (byte)(registers[0] >> 8);
+            bytes[2] = (byte)(registers[1] & 0xFF);
+            bytes[3] = (byte)(registers[1] >> 8);
             return BitConverter.ToSingle(bytes, 0);
         }
     }
