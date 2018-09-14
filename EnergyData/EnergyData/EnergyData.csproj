@@ -65,9 +65,10 @@
     <Compile Include="DAO\MedidorDAO.cs" />
     <Compile Include="Aquisitor.cs" />
     <Compile Include="Medicao.cs" />
-    <Compile Include="MedidorDeEnergia.cs" />
+    <Compile Include="EnergyMeter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

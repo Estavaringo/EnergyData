@@ -14,11 +14,11 @@ using System.Threading;
 namespace EnergyData {
     class Aquisitor {
 
-        private MedidorDeEnergia medidorDeEnergia;
+        private EnergyMeter medidorDeEnergia;
         private ushort registrador;    
         private ushort quantidade;
 
-        public Aquisitor(MedidorDeEnergia medidorDeEnergia, ushort registrador, ushort quantidade) {
+        public Aquisitor(EnergyMeter medidorDeEnergia, ushort registrador, ushort quantidade) {
             this.medidorDeEnergia = medidorDeEnergia;
             this.registrador = registrador;
             this.quantidade = quantidade;
@@ -35,8 +35,7 @@ namespace EnergyData {
 
 
                     ushort startAddress = this.registrador--;
-                    ushort numInputs = this.quantidade;
-                    ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, numInputs);
+                    ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, quantidade);
 
                     //throw new Exception("Medidor Offline");
             
