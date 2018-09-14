@@ -13,6 +13,7 @@ namespace EnergyData {
         public byte endereco { get; set; }
         public String modelo { get; set; }
         public String status { get; set; }
+        public bool ativo { get; set; }
 
         public bool checkCon() {
             return false;
