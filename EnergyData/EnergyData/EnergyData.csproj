@@ -63,9 +63,11 @@
     <Compile Include="DAO\BDConnection.cs" />
     <Compile Include="DAO\MedicaoDAO.cs" />
     <Compile Include="DAO\MedidorDAO.cs" />
-    <Compile Include="Aquisitor.cs" />
+    <Compile Include="Acquisitor.cs" />
+    <Compile Include="DataAcquisition.cs" />
     <Compile Include="Medicao.cs" />
     <Compile Include="EnergyMeter.cs" />
+    <Compile Include="Monitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterType.cs" />

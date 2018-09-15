@@ -32,10 +32,10 @@ namespace EnergyData {
         //retorna o valor do registrador especificado por type
         public Medicao getValueOfRegister(RegisterType type) {
             Medicao med = new Medicao(type.description, this.codigo);
-            Aquisitor aquisitor = null;
+            Acquisitor aquisitor = null;
 
             //constroi o aquisitor com o endereço e tamanho do registrador
-            aquisitor = new Aquisitor(this, type.register, type.numInputs);
+            aquisitor = new Acquisitor(this, type.register, type.numInputs);
 
 
             try {

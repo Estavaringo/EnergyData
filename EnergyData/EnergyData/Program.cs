@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnergyData
@@ -10,6 +11,7 @@ namespace EnergyData
     {
         static void Main(string[] args)
         {
+            int op;
 
             List<RegisterType> registers = new List<RegisterType>();
 
@@ -29,37 +31,14 @@ namespace EnergyData
             meters.Add(new EnergyMeter(159, "10.179.33.89", 192, "PM710", "Cubículo 9 - SE5", true));
             meters.Add(new EnergyMeter(160, "10.179.33.89", 193, "PM710", "Cubículo 10 - Geral Trafo 1", false));
 
-            while (true) { 
-                Console.WriteLine("\t\t SUBESTAÇÃO 88");
+            //creates thread thats acquires the data and put in the dataset
+            //DataAcquisition daq = new DataAcquisition(meters, registers);
+            //Thread threadDataAcquisition = new Thread(daq.Run);
+            //threadDataAcquisition.Priority = ThreadPriority.Highest;
+            //threadDataAcquisition.Start();
 
-                foreach (EnergyMeter meter in meters) {
-
-                    if (meter.active) {
-                        Console.WriteLine(meter.description);
-
-                        try {
-                            List<Medicao> medicoes = new List<Medicao>();
-
-                            foreach (RegisterType register in registers) {
-                                if (register.meterModel.Equals(meter.modelo)) medicoes.Add(meter.getValueOfRegister(register));
-                            }
-
-                            foreach (Medicao medicao in medicoes) {
-                                Console.WriteLine(medicao);
-                            }
-
-                        } catch (Exception e) {
-                            Console.WriteLine("FALHA DE COMUNICAÇÃO COM O MEDIDOR ");
-                        }
-                    }
-
-
-                    Console.WriteLine("");
-                }
-                Console.ReadLine();
-                Console.Clear();
-            }
-
-        }
+            Monitor.Run(meters, "SUBESTAÇÃO 88", registers);
+           
+        }      
     }
 }

@@ -12,13 +12,13 @@ using System.Net.Sockets;
 using System.Threading;
 
 namespace EnergyData {
-    class Aquisitor {
+    class Acquisitor {
 
         private EnergyMeter medidorDeEnergia;
         private ushort registrador;    
         private ushort quantidade;
 
-        public Aquisitor(EnergyMeter medidorDeEnergia, ushort registrador, ushort quantidade) {
+        public Acquisitor(EnergyMeter medidorDeEnergia, ushort registrador, ushort quantidade) {
             this.medidorDeEnergia = medidorDeEnergia;
             this.registrador = registrador;
             this.quantidade = quantidade;
