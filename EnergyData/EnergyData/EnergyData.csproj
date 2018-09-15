@@ -63,7 +63,6 @@
     <Compile Include="DAO\BDConnection.cs" />
     <Compile Include="DAO\MedicaoDAO.cs" />
     <Compile Include="DAO\MedidorDAO.cs" />
-    <Compile Include="Acquisitor.cs" />
     <Compile Include="DataAcquisition.cs" />
     <Compile Include="Medicao.cs" />
     <Compile Include="EnergyMeter.cs" />

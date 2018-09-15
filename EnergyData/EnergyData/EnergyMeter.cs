@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Modbus.Device;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,21 +36,43 @@ namespace EnergyData {
         public List<Medicao> getValueOfRegisters(List<RegisterType> types) {
             
             Acquisitor acquisitor = null;
-            List<Medicao> medicoes = null;
 
-            //constroi o aquisitor com o endereço e tamanho do registrador
-            acquisitor = new Acquisitor(this, types);
-
-
+            List<Medicao> medicoes = new List<Medicao>();
             try {
-                medicoes = acquisitor.Executa();
+                using (TcpClient client = new TcpClient(this.ip, 502)) {
+                    ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
+
+                    foreach (RegisterType registerType in types) {
+
+                        if (registerType.meterModel == this.modelo) {
+
+                            Medicao medicao = new Medicao(registerType.description, this.codigo);
+
+                            ushort startAddress = registerType.register;
+                            ushort[] registers = master.ReadHoldingRegisters(this.endereco, startAddress, registerType.numInputs);
+
+                            //throw new Exception("Medidor Offline");
+
+                            medicao.valor = ToFloat(registers);
+                            medicao.dataHora = DateTime.Now;
+                            medicoes.Add(medicao);
+                        }
+                    }
+                }
             } catch (Exception e) {
-                this.status = false;
                 throw e;
             }
-            
-
             return medicoes;
+        }
+
+        //converte o valor do registrador(32 bit) para float
+        public static float ToFloat(ushort[] registers) {
+            byte[] bytes = new byte[4];
+            bytes[0] = (byte)(registers[0] & 0xFF);
+            bytes[1] = (byte)(registers[0] >> 8);
+            bytes[2] = (byte)(registers[1] & 0xFF);
+            bytes[3] = (byte)(registers[1] >> 8);
+            return BitConverter.ToSingle(bytes, 0);
         }
 
     }
