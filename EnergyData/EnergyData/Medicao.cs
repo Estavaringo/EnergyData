@@ -18,7 +18,7 @@ namespace EnergyData {
         }
 
         public override string ToString() {
-            return this.valor + " " + grandezaEletrica;
+            return this.valor + " " + grandezaEletrica + " - "+ this.dataHora;
         }
     }
 }

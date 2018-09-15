@@ -24,9 +24,9 @@ namespace EnergyData {
                 foreach (EnergyMeter meter in this.meters) {
                     if (meter.active) {
                         try {
-                            foreach (RegisterType register in this.registers) {
-                                if (register.meterModel.Equals(meter.modelo)) medicoes.Add(meter.getValueOfRegister(register));
-                            }
+                            foreach(Medicao medicao in meter.getValueOfRegisters(registers))
+                            medicoes.Add(medicao);
+                            
                         } catch (Exception e) {
                             continue;
                         }

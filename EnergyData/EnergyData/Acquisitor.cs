@@ -15,36 +15,43 @@ namespace EnergyData {
     class Acquisitor {
 
         private EnergyMeter medidorDeEnergia;
-        private ushort registrador;    
-        private ushort quantidade;
+        private List<RegisterType> registers;
 
-        public Acquisitor(EnergyMeter medidorDeEnergia, ushort registrador, ushort quantidade) {
+        public Acquisitor(EnergyMeter medidorDeEnergia, List<RegisterType> registers) {
             this.medidorDeEnergia = medidorDeEnergia;
-            this.registrador = registrador;
-            this.quantidade = quantidade;
+            this.registers = registers;
         }
 
 
-        //executa a conexão com o equipamento e retorna o valor do registrador buscado
+        //executa a conexão com o equipamento e retorna o valor dos registradores buscados
         //NECESSARIO LANÇAR EXCESSÃO QUANDO FALHAR A CONEXÃO
-        public float Executa() {
-            float res;
+        public List<Medicao> Executa() {
+            List<Medicao> medicoes = new List<Medicao>();
             try{
                 using (TcpClient client = new TcpClient(this.medidorDeEnergia.ip, 502)) {
                     ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
 
+                    foreach (RegisterType registerType in this.registers) {
 
-                    ushort startAddress = this.registrador--;
-                    ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, quantidade);
+                        if (registerType.meterModel == this.medidorDeEnergia.modelo) {
 
-                    //throw new Exception("Medidor Offline");
-            
-                res = this.ToFloat(registers);
+                            Medicao medicao = new Medicao(registerType.description, this.medidorDeEnergia.codigo);
+
+                            ushort startAddress = registerType.register;
+                            ushort[] registers = master.ReadHoldingRegisters(this.medidorDeEnergia.endereco, startAddress, registerType.numInputs);
+
+                            //throw new Exception("Medidor Offline");
+
+                            medicao.valor = this.ToFloat(registers);
+                            medicao.dataHora = DateTime.Now;
+                            medicoes.Add(medicao);
+                        }
+                    }
                 }
             }catch (Exception e){
                 throw e;
             }
-            return res;
+            return medicoes;
         }
 
         //converte o valor do registrador(32 bit) para float

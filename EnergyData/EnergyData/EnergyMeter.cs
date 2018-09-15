@@ -23,6 +23,7 @@ namespace EnergyData {
             this.modelo = modelo;
             this.description = descricao;
             this.active = ativo;
+            this.status = true;
         }
 
         public bool checkCon() {
@@ -30,25 +31,24 @@ namespace EnergyData {
         }
 
         //retorna o valor do registrador especificado por type
-        public Medicao getValueOfRegister(RegisterType type) {
-            Medicao med = new Medicao(type.description, this.codigo);
-            Acquisitor aquisitor = null;
+        public List<Medicao> getValueOfRegisters(List<RegisterType> types) {
+            
+            Acquisitor acquisitor = null;
+            List<Medicao> medicoes = null;
 
             //constroi o aquisitor com o endereço e tamanho do registrador
-            aquisitor = new Acquisitor(this, type.register, type.numInputs);
+            acquisitor = new Acquisitor(this, types);
 
 
             try {
-                med.valor = aquisitor.Executa();
+                medicoes = acquisitor.Executa();
             } catch (Exception e) {
                 this.status = false;
                 throw e;
             }
+            
 
-            this.status = true;
-            med.dataHora = DateTime.Now;
-
-            return med;
+            return medicoes;
         }
 
     }
