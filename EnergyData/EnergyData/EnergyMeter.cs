@@ -1,10 +1,8 @@
 ﻿using Modbus.Device;
+using Modbus.Utility;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EnergyData {
 
@@ -35,7 +33,6 @@ namespace EnergyData {
         //retorna o valor do registrador especificado por type
         public List<Medicao> getValueOfRegisters(List<RegisterType> types) {
             
-            Acquisitor acquisitor = null;
 
             List<Medicao> medicoes = new List<Medicao>();
             try {
@@ -52,27 +49,19 @@ namespace EnergyData {
                             ushort[] registers = master.ReadHoldingRegisters(this.endereco, startAddress, registerType.numInputs);
 
                             //throw new Exception("Medidor Offline");
-
-                            medicao.valor = ToFloat(registers);
+                            
+                            medicao.valor = ModbusUtility.GetSingle(registers[1], registers[0]);
                             medicao.dataHora = DateTime.Now;
                             medicoes.Add(medicao);
+                            if (!this.status) this.status = true;
                         }
                     }
                 }
             } catch (Exception e) {
+                this.status = false;
                 throw e;
             }
             return medicoes;
-        }
-
-        //converte o valor do registrador(32 bit) para float
-        public static float ToFloat(ushort[] registers) {
-            byte[] bytes = new byte[4];
-            bytes[0] = (byte)(registers[0] & 0xFF);
-            bytes[1] = (byte)(registers[0] >> 8);
-            bytes[2] = (byte)(registers[1] & 0xFF);
-            bytes[3] = (byte)(registers[1] >> 8);
-            return BitConverter.ToSingle(bytes, 0);
         }
 
     }
