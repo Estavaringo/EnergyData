@@ -4,18 +4,27 @@ using System.Collections.Generic;
 namespace EnergyData {
 
     //show the readings in real time, just for test only
-    class Monitor {
+    class View {
+        List<EnergyMeter> meters; String local; List<Register> registers;
 
-        public static void Run(List<EnergyMeter> meters, String local, List<RegisterType> registers) {
+        public View(List<EnergyMeter> meters, String local, List<Register> registers) {
+            this.meters = meters;
+            this.local = local;
+            this.registers = registers;
+        }
+
+        public void Run() {
             while (true) {
-                List<Medicao> medicoes = new List<Medicao>();
+                List<Measurement> measurements = new List<Measurement>();
                 foreach (EnergyMeter meter in meters) {
                     if (meter.active) {
                         try {
-                            foreach (Medicao medicao in meter.getValueOfRegisters(registers))
-                                medicoes.Add(medicao);
+                            foreach (Measurement measurement in meter.getValueOfRegisters(registers))
+                                measurements.Add(measurement);
                         } catch (Exception e) {
-                              continue;
+                            Console.Write(e.Message + e.InnerException.Message + DateTime.Now);
+                            //create a log with error messages
+                            continue;
                         }
                     }
                 }
@@ -24,8 +33,8 @@ namespace EnergyData {
                     if (meter.active) {
                         outp = outp + "\t" + meter.description + "\n";
                         if (meter.status) {
-                            foreach (Medicao medicao in medicoes) {
-                                if (medicao.codigoMedidor == meter.codigo) outp = outp + "\t\t" + medicao.ToString() + "\n";
+                            foreach (Measurement medicao in measurements) {
+                                if (medicao.meterID == meter.id) outp = outp + "\t\t" + medicao.ToString() + "\n";
                             }
                         } else {
                             outp = outp + "\t FALHA DE COMUNICAÇÃO COM O MEDIDOR \n";

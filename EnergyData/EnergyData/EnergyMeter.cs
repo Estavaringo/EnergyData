@@ -8,60 +8,63 @@ namespace EnergyData {
 
     class EnergyMeter {
 
-        public int codigo { get; set; }
-        public String ip { get; set; }
-        public byte endereco { get; set; }
-        public String modelo { get; set; }
+        public int id { get; set; }         
+        public String ip { get; set; }      //IP address (modbus TCP protocol)
+        public byte address { get; set; }   //modbus address
+        public String model { get; set; }   //manufacturer model
         public String description { get; set; }
-        public bool status { get; set; }    //flag medidor OK ou não
+        public bool status { get; set; }    //flag OK
         public bool active { get; set; }
 
         public EnergyMeter(int codigo, String ip, byte endereco, String modelo, String descricao, bool ativo){
-            this.codigo = codigo;
+            this.id = codigo;
             this.ip = ip;
-            this.endereco = endereco;
-            this.modelo = modelo;
+            this.address = endereco;
+            this.model = modelo;
             this.description = descricao;
             this.active = ativo;
             this.status = true;
         }
 
+
         public bool checkCon() {
-            return false;
+            throw new Exception("Not implemented yet");
         }
 
-        //retorna o valor do registrador especificado por type
-        public List<Medicao> getValueOfRegisters(List<RegisterType> types) {
+        //return register values specified by types
+        public List<Measurement> getValueOfRegisters(List<Register> registers) {
             
-
-            List<Medicao> medicoes = new List<Medicao>();
+            List<Measurement> measurements = new List<Measurement>();
             try {
                 using (TcpClient client = new TcpClient(this.ip, 502)) {
                     ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
 
-                    foreach (RegisterType registerType in types) {
+                    foreach (Register register in registers) {
 
-                        if (registerType.meterModel == this.modelo) {
+                        if (register.meterModel == this.model) {
 
-                            Medicao medicao = new Medicao(registerType.description, this.codigo);
+                            Measurement medicao = new Measurement(register.description, this.id);
 
-                            ushort startAddress = registerType.register;
-                            ushort[] registers = master.ReadHoldingRegisters(this.endereco, startAddress, registerType.numInputs);
-
-                            //throw new Exception("Medidor Offline");
+                            ushort startAddress = register.register;
+                            ushort[] values = master.ReadHoldingRegisters(this.address, startAddress, register.numInputs);
                             
-                            medicao.valor = ModbusUtility.GetSingle(registers[1], registers[0]);
-                            medicao.dataHora = DateTime.Now;
-                            medicoes.Add(medicao);
+                            medicao.value = ModbusUtility.GetSingle(values[1], values[0]);
+
+                            if (this.model.Equals("CCK4100S") && register.description.Equals("V"))
+                                medicao.value = medicao.value * (92000 / 66);
+                            
+                            medicao.dateTime = DateTime.Now;
+                            measurements.Add(medicao);
                             if (!this.status) this.status = true;
                         }
                     }
                 }
             } catch (Exception e) {
                 this.status = false;
-                throw e;
+                
+                throw new Exception(this.id + " " + this.description + " " + this.model, e);
             }
-            return medicoes;
+            return measurements;
         }
 
     }
