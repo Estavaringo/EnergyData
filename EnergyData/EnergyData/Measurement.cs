@@ -10,7 +10,7 @@ namespace EnergyData {
         public DateTime dateTime { get; set; }
         public int meterID { get; set; }
         public String magnitude { get; set; }
-        public float value { get; set; }
+        public double value { get; set; }
 
         public Measurement(String grandezaEletrica, int codigoMedidor) {
             this.meterID = codigoMedidor;
@@ -21,7 +21,7 @@ namespace EnergyData {
         }
 
         public override string ToString() {
-            return this.value + " " + magnitude + " - "+ this.dateTime;
+            return this.value + " " + magnitude + " - "+ this.dateTime.TimeOfDay;
         }
     }
 }

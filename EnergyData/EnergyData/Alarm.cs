@@ -20,16 +20,16 @@ namespace EnergyData {
                 List<Measurement> medicoes = new List<Measurement>();
                 foreach (EnergyMeter meter in meters) {
                     if (meter.active) {
-                        try {
-                            foreach (Measurement medicao in meter.getValueOfRegisters(registers)) {
-                                if (medicao.magnitude.Equals("V") && medicao.value < limitMin) {
+                      /*  try {
+                            //foreach (Measurement medicao in meter.getValueOfRegisters(registers)) {
+                             //   if (medicao.magnitude.Equals("V") && medicao.value < limitMin) {
                                     
-                                }
+                            //    }
                             }
                         } catch (Exception e) {
                             Console.Write(e.Message + e.InnerException.Message);
                             continue;
-                        }
+                        }*/
                     }
                 }
             }

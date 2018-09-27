@@ -1,5 +1,9 @@
-﻿using System;
+﻿using EnergyData.DAO;
+using Modbus;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
 
 namespace EnergyData {
 
@@ -18,14 +22,29 @@ namespace EnergyData {
         public void Run() {
             while (true) {
                 measurements = new List<Measurement>();
+                int tries = 0;
                 foreach (EnergyMeter meter in this.meters) {
                     if (meter.active) {
-                        try {
-                            foreach(Measurement medicao in meter.getValueOfRegisters(registers))
-                            measurements.Add(medicao);
-                            
-                        } catch (Exception e) {
-                            continue;
+                        while (tries < 2) {
+                            try { 
+                                //insere as medições no BD
+                                foreach (Measurement measurement in meter.getValueOfRegisters(registers))
+                                measurements.Add(measurement);
+                                MedicaoDAO.insert(measurements);
+                                break;
+                            } catch (IOException e) {
+                                Console.WriteLine(e.Message + e.InnerException.Message + DateTime.Now);
+                                //create a log with error messages
+                                tries++;
+                            } catch (SlaveException e) { //falha de comunicação modbus
+                                Console.WriteLine(e.Message + e.InnerException.Message + DateTime.Now);
+                                //create a log with error messages
+                                tries++;
+                            } catch (SocketException e) { //falha conexão com o IP
+                                Console.WriteLine(e.Message + e.InnerException.Message + DateTime.Now);
+                                //create a log with error messages
+                                tries++;
+                            }
                         }
                     }
                 }

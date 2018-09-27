@@ -14,7 +14,7 @@ namespace EnergyData
             registers.Add(new Register("KW", 1004, 2, "PM710"));
             registers.Add(new Register("A", 1016, 2, "PM710"));
             registers.Add(new Register("FP", 1010, 2, "PM710"));
-            registers.Add(new Register("V", 1034, 2, "CCK4100S"));
+            registers.Add(new Register("V", 1040, 2, "CCK4100S"));
             registers.Add(new Register("Hz", 1082, 2, "CCK4100S"));
 
             //List of meters 
@@ -31,7 +31,7 @@ namespace EnergyData
 
 
             List<EnergyMeter> metersMainLine = new List<EnergyMeter>();
-            metersMainLine.Add(new EnergyMeter(1, "10.179.33.88", 11, "CCK4100S", "Linha 1 - Geral", true));
+            //metersMainLine.Add(new EnergyMeter(1, "10.179.33.88", 11, "CCK4100S", "Linha 1 - Geral", true));
 
             //creates thread thats visualize the data
             View view = new View(metersSE88, "SUBESTAÇÃO 88", registers);
@@ -39,10 +39,10 @@ namespace EnergyData
             threadView.Start();
 
 
-            Alarm alarm = new Alarm(metersMainLine, registers);
+            /*Alarm alarm = new Alarm(metersMainLine, registers);
             Thread threadAlarm = new Thread(alarm.Run);
             threadAlarm.Priority = ThreadPriority.Highest;
-            threadAlarm.Start();
+            threadAlarm.Start();*/
 
         }      
     }

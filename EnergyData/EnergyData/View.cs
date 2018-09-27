@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Modbus;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
 
 namespace EnergyData {
 
@@ -21,10 +24,15 @@ namespace EnergyData {
                         try {
                             foreach (Measurement measurement in meter.getValueOfRegisters(registers))
                                 measurements.Add(measurement);
-                        } catch (Exception e) {
-                            Console.Write(e.Message + e.InnerException.Message + DateTime.Now);
+                        } catch (IOException e) {
+                            Console.WriteLine(e.Message + " " + e.InnerException.Message +" " + DateTime.Now);
                             //create a log with error messages
-                            continue;
+                        } catch (SlaveException e) { //falha de comunicação modbus
+                            Console.WriteLine(e.Message + " " + e.InnerException.Message + " " + DateTime.Now);
+                            //create a log with error messages
+                        } catch (SocketException e) { //falha conexão com o IP
+                            Console.WriteLine(e.Message + " " + e.InnerException.Message + " " + DateTime.Now);
+                            //create a log with error messages
                         }
                     }
                 }
@@ -42,7 +50,7 @@ namespace EnergyData {
                     }
                     outp = outp + "\n";
                 }
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine(outp);
             }
         }
