@@ -28,8 +28,9 @@ namespace EnergyData {
                         while (tries < 2) {
                             try { 
                                 //insere as medições no BD
-                                foreach (Measurement measurement in meter.getValueOfRegisters(registers))
-                                measurements.Add(measurement);
+                                //foreach (Measurement measurement in meter.getValueOfRegisters(registers))
+                                //measurements.Add(measurement);
+                                measurements = meter.getValueOfRegisters(registers);
                                 MedicaoDAO.insert(measurements);
                                 break;
                             } catch (IOException e) {
